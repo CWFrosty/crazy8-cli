@@ -22,6 +22,17 @@ class Deck:
     def draw(self):
         """Vzemi vrhnjo karto; če jih zmanjka vrni None."""
         return self.cards.pop() if self.cards else None
+        
+def legal_move(card, top_card):
+    """Karta je legalna, če:
+       • je enake barve ali ranga kot zgornja
+       • ALI je osmica (wild)
+    """
+    return (
+        card.rank == "8"
+        or card.suit == top_card.suit
+        or card.rank == top_card.rank
+    )
 
 class Player:
     def __init__(self, name: str, is_ai: bool = False):
@@ -29,12 +40,13 @@ class Player:
         self.hand = []
         self.is_ai = is_ai
 
-    def choose_card(self, top_card):
-        """
-        Izberi karto za igro.
-        TODO: implementacija AI + vnos za človeka.
-        """
-        pass
+def choose_card(self, top_card):
+        """Vrne (index, card) ali None, če nima legalne poteze."""
+        for idx, card in enumerate(self.hand):
+            if legal_move(card, top_card):
+                return idx, card         # prva legalna
+        return None                      # nič ne ustreza
+
 
 class Game:
     def __init__(self):
