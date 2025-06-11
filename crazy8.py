@@ -36,7 +36,6 @@ def legal_move(card: Card, top_card: Card) -> bool:
         or card.rank == top_card.rank
     )
 
-
 # ----------------------------------------
 #  IGRALEC
 # ----------------------------------------
@@ -49,9 +48,12 @@ class Player:
 
     def choose_card(self, top_card: Card):
         """Vrne (index, karta) ali None."""
-        # ───────── ČLOVEK: vprašaj za vnos, dokler ne izbere legalnega ali 'p'
+
+        # ---- ČLOVEK: vnos dokler ne izbere legalne ali 'p'
         if not self.is_ai:
+            print(f"Na mizi je: {top_card}")
             print("Tvoja roka:", ", ".join(f"[{i}]{c}" for i, c in enumerate(self.hand)))
+            print("Legalne poteze so:", [f"[{i}]{c}" for i, c in enumerate(self.hand) if legal_move(c, top_card)])
             while True:
                 choice = input("Izberi index karte ali 'p' za potegni: ")
                 if choice.lower() == 'p':
@@ -61,25 +63,25 @@ class Player:
                     if 0 <= idx < len(self.hand) and legal_move(self.hand[idx], top_card):
                         return idx, self.hand[idx]
                 print("Neveljavna poteza – poskusi ponovno.")
+            # Če prideš sem, nekaj ni OK
+            return None
 
-        # ───────── AI: ohrani 8 do konca in izberi barvo za 8 ─────────
+        # ---- AI: čim dlje špara 8, če mora pa jo odigra tako da je koristno
         legal_cards = [(i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card)]
         if not legal_cards:
             return None
 
-        # Če so na voljo karte brez 8
+        # Igraj prvo, ki ni 8
         non_eights = [(i, c) for i, c in legal_cards if c.rank != "8"]
         if non_eights:
             return non_eights[0]
 
-        # imamo samo 8 → izberi suit z največ kartami (razen 8)
+        # Igraj 8, če ni druge
         counts = {}
         for c in self.hand:
             if c.rank != "8":
                 counts[c.suit] = counts.get(c.suit, 0) + 1
         best_suit = max(counts, key=counts.get) if counts else legal_cards[0][1].suit
-
-        # poišči 8 tega suita, sicer prvo 8
         for i, c in legal_cards:
             if c.rank == "8" and c.suit == best_suit:
                 return i, c
