@@ -106,6 +106,19 @@ class Game:
                 p.hand.append(self.deck.draw())
         self.discard.append(self.deck.draw())
 
+    def draw_card(self):
+        # Če je deck prazen, premešaj discard (razen zadnje karte!)
+        if not self.deck.cards:
+            if len(self.discard) > 1:
+                top = self.discard.pop()
+                self.deck.cards = self.discard
+                shuffle(self.deck.cards)
+                self.discard = [top]
+            else:
+                # Ni več kart za vleči
+                return None
+        return self.deck.draw()
+
     def play_turn(self):
         """Izvede eno potezo; vrne zmagovalca ali None."""
         player = self.players[self.current]
@@ -114,7 +127,7 @@ class Game:
         choice = player.choose_card(top)
 
         if choice is None:
-            drawn = self.deck.draw()
+            drawn = self.draw_card() 
             if drawn:
                 player.hand.append(drawn)
                 print(f"{player.name} vleče {drawn}")
