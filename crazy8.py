@@ -47,10 +47,11 @@ class Player:
         self.is_ai  = is_ai
 
     def choose_card(self, top_card: Card):
-        """Vrne (index, karta) ali None. Če je človek, vpraša za vnos."""
+        """Vrne (index, karta) ali None."""
+        # ───────── ČLOVEK: vprašaj za vnos, dokler ne izbere legalnega ali 'p'
         if not self.is_ai:
-            # izpiši roko
-            print(f"Tvoja roka: " + ", ".join(f"[{i}]{c}" for i,c in enumerate(self.hand)))
+            # pokaži roko
+            print("Tvoja roka:", ", ".join(f"[{i}]{c}" for i, c in enumerate(self.hand)))
             while True:
                 choice = input("Izberi index karte ali 'p' za potegni: ")
                 if choice.lower() == 'p':
@@ -59,11 +60,13 @@ class Player:
                     idx = int(choice)
                     if 0 <= idx < len(self.hand) and legal_move(self.hand[idx], top_card):
                         return idx, self.hand[idx]
-                print("Neveljavna poteza – izberi drug index ali 'p'.")
+                print("Neveljavna poteza – poskusi ponovno.")
+  
         for idx, card in enumerate(self.hand):
             if legal_move(card, top_card):
                 return idx, card
         return None
+
 
 
 # ----------------------------------------
