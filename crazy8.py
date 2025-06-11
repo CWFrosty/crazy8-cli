@@ -1,7 +1,7 @@
 from random import shuffle
 
 # ----------------------------------------
-#  Models
+#  MODELI
 # ----------------------------------------
 
 class Card:
@@ -12,6 +12,7 @@ class Card:
     def __str__(self):
         return f"{self.rank}{self.suit}"
 
+
 class Deck:
     def __init__(self):
         suits  = "♥♦♣♠"
@@ -20,13 +21,14 @@ class Deck:
         shuffle(self.cards)
 
     def draw(self):
-        """Vzemi vrhnjo karto; če jih zmanjka vrni None."""
+        """Vzemi vrhnjo karto; vrne None, če je kup prazen."""
         return self.cards.pop() if self.cards else None
-        
-def legal_move(card, top_card):
-    """Karta je legalna, če:
-       • je enake barve ali ranga kot zgornja
-       • ALI je osmica (wild)
+
+
+def legal_move(card: Card, top_card: Card) -> bool:
+    """Karta je legalna, če je:
+       • enak SUIT ali RANK kot zgornja
+       • ali je osmica (wild)
     """
     return (
         card.rank == "8"
@@ -34,19 +36,27 @@ def legal_move(card, top_card):
         or card.rank == top_card.rank
     )
 
+# ----------------------------------------
+#  IGRALEC
+# ----------------------------------------
+
 class Player:
     def __init__(self, name: str, is_ai: bool = False):
-        self.name = name
-        self.hand = []
-        self.is_ai = is_ai
+        self.name   = name
+        self.hand   = []
+        self.is_ai  = is_ai
 
-def choose_card(self, top_card):
-        """Vrne (index, card) ali None, če nima legalne poteze."""
+    def choose_card(self, top_card: Card):
+        """Vrne (index, karta) ali None, če nima legalne poteze."""
+        # Trenutno: AI in človeški igr. igrata enako – prvo legalno karto
         for idx, card in enumerate(self.hand):
             if legal_move(card, top_card):
-                return idx, card         # prva legalna
-        return None                      # nič ne ustreza
+                return idx, card
+        return None  # nima legalne
 
+# ----------------------------------------
+#  GLAVNA IGRA
+# ----------------------------------------
 
 class Game:
     def __init__(self):
@@ -55,16 +65,61 @@ class Game:
         self.discard  = []
         self.current  = 0  # indeks trenutnega igralca
 
+    # --------------------
+    #  Setup
+    # --------------------
     def deal(self):
-        """Razdeli 5 kart vsakemu igralcu in položi eno karto na mizo."""
+        """Razdeli po 5 kart + 1 odloži na kup za začetek."""
         for _ in range(5):
             for p in self.players:
                 p.hand.append(self.deck.draw())
         self.discard.append(self.deck.draw())
 
-    # TODO: implement play_turn(), check_winner(), run()
+    # --------------------
+    #  Ena poteza
+    # --------------------
+    def play_turn(self):
+        player  = self.players[self.current]
+        top     = self.discard[-1]
+
+        choice = player.choose_card(top)
+
+        if choice is None:
+            drawn = self.deck.draw()
+            if drawn:
+                player.hand.append(drawn)
+                print(f"{player.name} vleče {drawn}")
+            else:
+                print("Kup je prazen, {player.name} preskoči.")
+        else:
+            idx, card = choice
+            self.discard.append(player.hand.pop(idx))
+            print(f"{player.name} odigra {card}")
+
+        # Preveri zmago
+        if not player.hand:
+            return player
+
+        # Na vrsto pride naslednji
+        self.current = (self.current + 1) % len(self.players)
+        return None
+
+    # --------------------
+    #  Glavna zanka
+    # --------------------
+    def run(self):
+        winner = None
+        while not winner:
+            winner = self.play_turn()
+
+        print(f"\n🏆  Zmagovalec je: {winner.name}  🏆")
+
+# ----------------------------------------
+#  ZAŽENI IGRO
+# ----------------------------------------
 
 if __name__ == "__main__":
     game = Game()
     game.deal()
-    # TODO: game.run()
+    game.run()
+
