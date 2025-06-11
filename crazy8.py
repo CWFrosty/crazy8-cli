@@ -15,8 +15,8 @@ class Card:
 
 class Deck:
     def __init__(self):
-        suits  = "♥♦♣♠"
-        ranks  = [str(n) for n in range(2, 11)] + list("JQKA8")
+        suits = "♥♦♣♠"
+        ranks = [str(n) for n in range(2, 11)] + list("JQKA8")
         self.cards = [Card(s, r) for s in suits for r in ranks]
         shuffle(self.cards)
 
@@ -36,21 +36,21 @@ def legal_move(card: Card, top_card: Card) -> bool:
         or card.rank == top_card.rank
     )
 
+
 # ----------------------------------------
 #  IGRALEC
 # ----------------------------------------
 
 class Player:
     def __init__(self, name: str, is_ai: bool = False):
-        self.name   = name
-        self.hand   = []
-        self.is_ai  = is_ai
+        self.name = name
+        self.hand = []
+        self.is_ai = is_ai
 
     def choose_card(self, top_card: Card):
         """Vrne (index, karta) ali None."""
         # ───────── ČLOVEK: vprašaj za vnos, dokler ne izbere legalnega ali 'p'
         if not self.is_ai:
-            # pokaži roko
             print("Tvoja roka:", ", ".join(f"[{i}]{c}" for i, c in enumerate(self.hand)))
             while True:
                 choice = input("Izberi index karte ali 'p' za potegni: ")
@@ -61,32 +61,29 @@ class Player:
                     if 0 <= idx < len(self.hand) and legal_move(self.hand[idx], top_card):
                         return idx, self.hand[idx]
                 print("Neveljavna poteza – poskusi ponovno.")
-  
+
         # ───────── AI: ohrani 8 do konca in izberi barvo za 8 ─────────
-    legal_cards = [ (i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card) ]
-    if not legal_cards:
-        return None
+        legal_cards = [(i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card)]
+        if not legal_cards:
+            return None
 
-    # Če so na voljo karte brez 8
-    non_eights = [ (i, c) for i, c in legal_cards if c.rank != "8" ]
-    if non_eights:
-        # igraj prvo legalno ne-8
-        return non_eights[0]
+        # Če so na voljo karte brez 8
+        non_eights = [(i, c) for i, c in legal_cards if c.rank != "8"]
+        if non_eights:
+            return non_eights[0]
 
-    # preštej suits v roki (razen 8)
-    counts = {}
-    for _, c in self.hand:
-        if c.rank != "8":
-            counts[c.suit] = counts.get(c.suit, 0) + 1
-    # naj suit po največ kartah
-    best_suit = max(counts, key=counts.get) if counts else legal_cards[0][1].suit
-    # poišči prvo 8 v roki s tem suit
-    for i, c in legal_cards:
-        if c.rank == "8" and c.suit == best_suit:
-            return i, c
-    # če ni ustrezne barve, igraj kar prvo 8
-    return legal_cards[0]
+        # imamo samo 8 → izberi suit z največ kartami (razen 8)
+        counts = {}
+        for c in self.hand:
+            if c.rank != "8":
+                counts[c.suit] = counts.get(c.suit, 0) + 1
+        best_suit = max(counts, key=counts.get) if counts else legal_cards[0][1].suit
 
+        # poišči 8 tega suita, sicer prvo 8
+        for i, c in legal_cards:
+            if c.rank == "8" and c.suit == best_suit:
+                return i, c
+        return legal_cards[0]
 
 
 # ----------------------------------------
@@ -95,14 +92,11 @@ class Player:
 
 class Game:
     def __init__(self):
-        self.deck     = Deck()
-        self.players  = [Player("Ti"), Player("CPU", is_ai=True)]
-        self.discard  = []
-        self.current  = 0  # indeks trenutnega igralca
+        self.deck = Deck()
+        self.players = [Player("Ti"), Player("CPU", is_ai=True)]
+        self.discard = []
+        self.current = 0  # indeks trenutnega igralca
 
-    # --------------------
-    #  Setup
-    # --------------------
     def deal(self):
         """Razdeli po 5 kart + 1 odloži na kup za začetek."""
         for _ in range(5):
@@ -110,12 +104,10 @@ class Game:
                 p.hand.append(self.deck.draw())
         self.discard.append(self.deck.draw())
 
-    # --------------------
-    #  Ena poteza
-    # --------------------
     def play_turn(self):
-        player  = self.players[self.current]
-        top     = self.discard[-1]
+        """Izvede eno potezo; vrne zmagovalca ali None."""
+        player = self.players[self.current]
+        top = self.discard[-1]
 
         choice = player.choose_card(top)
 
@@ -125,29 +117,25 @@ class Game:
                 player.hand.append(drawn)
                 print(f"{player.name} vleče {drawn}")
             else:
-                print("Kup je prazen, {player.name} preskoči.")
+                print(f"Kup je prazen, {player.name} preskoči.")
         else:
             idx, card = choice
             self.discard.append(player.hand.pop(idx))
             print(f"{player.name} odigra {card}")
 
-        # Preveri zmago
         if not player.hand:
             return player
 
-        # Na vrsto pride naslednji
         self.current = (self.current + 1) % len(self.players)
         return None
 
-    # --------------------
-    #  Glavna zanka
-    # --------------------
     def run(self):
+        """Zažene glavno zanko igre, dokler kdo ne zmaga."""
         winner = None
         while not winner:
             winner = self.play_turn()
-
         print(f"\n🏆  Zmagovalec je: {winner.name}  🏆")
+
 
 # ----------------------------------------
 #  ZAŽENI IGRO
@@ -157,4 +145,3 @@ if __name__ == "__main__":
     game = Game()
     game.deal()
     game.run()
-
