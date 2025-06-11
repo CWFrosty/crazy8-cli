@@ -9,8 +9,11 @@ Repo bo služil kot dokaz iterativnega razvoja (LO3) in podlaga za Class diagram
 - [ ] Preverjanje legalnosti poteze  
 - [ ] Zaznavanje zmage in izpis rezultatov
 
-### Posnetek delujoče 1. iteracije
+### ER diagram
+![CLI demo](ER diagram.drawio.png)
+
+#### Posnetek delujoče 1. iteracije
 ![CLI demo](demo_cli_run.jpg)
 
-#### Posnetek delujoče 1. iteracije (interaktivni vnos)
+##### Posnetek delujoče 1. iteracije (interaktivni vnos)
 ![CLI demo](cli_input.jpg)
