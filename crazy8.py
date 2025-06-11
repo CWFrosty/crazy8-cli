@@ -62,10 +62,30 @@ class Player:
                         return idx, self.hand[idx]
                 print("Neveljavna poteza – poskusi ponovno.")
   
-        for idx, card in enumerate(self.hand):
-            if legal_move(card, top_card):
-                return idx, card
+        # ───────── AI: ohrani 8 do konca in izberi barvo za 8 ─────────
+    legal_cards = [ (i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card) ]
+    if not legal_cards:
         return None
+
+    # Če so na voljo karte brez 8
+    non_eights = [ (i, c) for i, c in legal_cards if c.rank != "8" ]
+    if non_eights:
+        # igraj prvo legalno ne-8
+        return non_eights[0]
+
+    # preštej suits v roki (razen 8)
+    counts = {}
+    for _, c in self.hand:
+        if c.rank != "8":
+            counts[c.suit] = counts.get(c.suit, 0) + 1
+    # naj suit po največ kartah
+    best_suit = max(counts, key=counts.get) if counts else legal_cards[0][1].suit
+    # poišči prvo 8 v roki s tem suit
+    for i, c in legal_cards:
+        if c.rank == "8" and c.suit == best_suit:
+            return i, c
+    # če ni ustrezne barve, igraj kar prvo 8
+    return legal_cards[0]
 
 
 
