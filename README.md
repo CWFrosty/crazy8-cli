@@ -8,3 +8,6 @@ Repo bo služil kot dokaz iterativnega razvoja (LO3) in podlaga za Class diagram
 - [ ] `Player.choose_card()` – preprosta AI (prva legalna karta, osmico pusti za konec)  
 - [ ] Preverjanje legalnosti poteze  
 - [ ] Zaznavanje zmage in izpis rezultatov
+
+### Posnetek delujoče 1. iteracije
+![CLI demo](docs/screenshots/demo_cli_run.jpg)
