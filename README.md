@@ -10,4 +10,4 @@ Repo bo služil kot dokaz iterativnega razvoja (LO3) in podlaga za Class diagram
 - [ ] Zaznavanje zmage in izpis rezultatov
 
 ### Posnetek delujoče 1. iteracije
-![CLI demo](docs/screenshots/demo_cli_run.jpg)
+![CLI demo](demo_cli_run.jpg)
