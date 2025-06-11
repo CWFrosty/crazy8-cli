@@ -46,54 +46,54 @@ class Player:
         self.hand = []
         self.is_ai = is_ai
 
-def choose_card(self, top_card: Card):
-    """Vrne (index, karta) ali None."""
+    def choose_card(self, top_card: Card):
+        """Vrne (index, karta) ali None."""
 
-    # ---- ČLOVEK: vnos dokler ne izbere legalne ali 'p'
-    if not self.is_ai:
-        print(f"Na mizi je: {top_card}")
-        print("Tvoja roka:", ", ".join(f"[{i}]{c}" for i, c in enumerate(self.hand)))
-        print("Legalne poteze so:", [f"[{i}]{c}" for i, c in enumerate(self.hand) if legal_move(c, top_card)])
-        while True:
-            choice = input("Izberi index karte ali 'p' za potegni: ")
-            if choice.lower() == 'p':
-                return None
-            if choice.isdigit():
-                idx = int(choice)
-                if 0 <= idx < len(self.hand) and legal_move(self.hand[idx], top_card):
-                    return idx, self.hand[idx]
-            print("Neveljavna poteza – poskusi ponovno.")
-        return None
+        # ---- ČLOVEK: vnos dokler ne izbere legalne ali 'p'
+        if not self.is_ai:
+            print(f"Na mizi je: {top_card}")
+            print("Tvoja roka:", ", ".join(f"[{i}]{c}" for i, c in enumerate(self.hand)))
+            print("Legalne poteze so:", [f"[{i}]{c}" for i, c in enumerate(self.hand) if legal_move(c, top_card)])
+            while True:
+                choice = input("Izberi index karte ali 'p' za potegni: ")
+                if choice.lower() == 'p':
+                    return None
+                if choice.isdigit():
+                    idx = int(choice)
+                    if 0 <= idx < len(self.hand) and legal_move(self.hand[idx], top_card):
+                        return idx, self.hand[idx]
+                print("Neveljavna poteza – poskusi ponovno.")
+            return None
 
-    # ---- AI (CPU) ----
-    # 1. Poišči vse legalne karte
-    legal_cards = [(i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card)]
-    if not legal_cards:
-        return None
+        # ---- AI (CPU) ----
+        # 1. Poišči vse legalne karte
+        legal_cards = [(i, c) for i, c in enumerate(self.hand) if legal_move(c, top_card)]
+        if not legal_cards:
+            return None
 
-    # 2. Najprej probaj odigrat katerokoli legalno karto, razen osmice
-    non_eights = [(i, c) for i, c in legal_cards if c.rank != "8"]
-    if non_eights:
-        return non_eights[0]  # izberi prvo legalno ne-osmico
+        # 2. Najprej probaj odigrat katerokoli legalno karto, razen osmice
+        non_eights = [(i, c) for i, c in legal_cards if c.rank != "8"]
+        if non_eights:
+            return non_eights[0]  # izberi prvo legalno ne-osmico
 
-    # 3. Če ima samo osmice, izberi tisto, ki ima najljubšo barvo
-    # Preštej koliko kart ima AI v vsaki barvi
-    suit_count = {}
-    for card in self.hand:
-        if card.rank != "8":
-            suit_count[card.suit] = suit_count.get(card.suit, 0) + 1
-    # Katera barva ima največ
-    if suit_count:
-        best_suit = max(suit_count, key=suit_count.get)
-    else:
-        best_suit = legal_cards[0][1].suit  # če ima samo osmice, vzemi kar prvo barvo
+        # 3. Če ima samo osmice, izberi tisto, ki ima najljubšo barvo
+        # Preštej koliko kart ima AI v vsaki barvi
+        suit_count = {}
+        for card in self.hand:
+            if card.rank != "8":
+                suit_count[card.suit] = suit_count.get(card.suit, 0) + 1
+        # Katera barva ima največ
+        if suit_count:
+            best_suit = max(suit_count, key=suit_count.get)
+        else:
+            best_suit = legal_cards[0][1].suit  # če ima samo osmice, vzemi kar prvo barvo
 
-    # Poišči osmico v tej barvi
-    for i, c in legal_cards:
-        if c.rank == "8" and c.suit == best_suit:
-            return i, c
-    # Če ne najde, igraj katerokoli osmico
-    return legal_cards[0]
+        # Poišči osmico v tej barvi
+        for i, c in legal_cards:
+            if c.rank == "8" and c.suit == best_suit:
+                return i, c
+        # Če ne najde, igraj katerokoli osmico
+        return legal_cards[0]
 
 
 # ----------------------------------------
