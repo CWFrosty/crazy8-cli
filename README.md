@@ -10,7 +10,7 @@ Repo bo služil kot dokaz iterativnega razvoja (LO3) in podlaga za Class diagram
 - [ ] Zaznavanje zmage in izpis rezultatov
 
 ### ER diagram
-![CLI demo](ER diagram.drawio.png)
+![CLI demo](ER_diagram.drawio.png)
 
 #### Posnetek delujoče 1. iteracije
 ![CLI demo](demo_cli_run.jpg)
