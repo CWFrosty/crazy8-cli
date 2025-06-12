@@ -9,14 +9,26 @@ Repo bo služil kot dokaz iterativnega razvoja (LO3) in podlaga za Class diagram
 - [ ] Preverjanje legalnosti poteze  
 - [ ] Zaznavanje zmage in izpis rezultatov
 
-### ER diagram
+### Zagon igre Crazy 8 (Windows)
+
+Odpri terminal v mapi projekta (kjer je crazy8.py).
+
+Če imaš težave z izpisom Unicode znakov (npr. ♠, ♥), najprej nastavi kodiranje:
+
+*export PYTHONIOENCODING=utf-8*
+
+Zaženi igro z ukazom:
+
+*python crazy8.py*
+
+#### ER diagram
 ![CLI demo](ER_diagram.drawio.png)
 
-#### Posnetek delujoče 1. iteracije
+##### Posnetek delujoče 1. iteracije
 ![CLI demo](demo_cli_run.jpg)
 
-##### Posnetek delujoče 1. iteracije (interaktivni vnos)
+###### Posnetek delujoče 1. iteracije (interaktivni vnos)
 ![CLI demo](cli_input.jpg)
 
-###### Posnetek uspešne igre
+####### Posnetek uspešne igre
 ![CLI demo](test_igre.jpg)
