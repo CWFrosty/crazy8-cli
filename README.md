@@ -24,11 +24,11 @@ Zaženi igro z ukazom:
 #### ER diagram
 ![CLI demo](ER_diagram.drawio.png)
 
-##### Posnetek delujoče 1. iteracije
+#### Posnetek delujoče 1. iteracije
 ![CLI demo](demo_cli_run.jpg)
 
-###### Posnetek delujoče 1. iteracije (interaktivni vnos)
+#### Posnetek delujoče 1. iteracije (interaktivni vnos)
 ![CLI demo](cli_input.jpg)
 
-###### Posnetek uspešne igre
+#### Posnetek uspešne igre
 ![CLI demo](test_igre.jpg)
