@@ -30,5 +30,5 @@ Zaženi igro z ukazom:
 ###### Posnetek delujoče 1. iteracije (interaktivni vnos)
 ![CLI demo](cli_input.jpg)
 
-####### Posnetek uspešne igre
+###### Posnetek uspešne igre
 ![CLI demo](test_igre.jpg)
